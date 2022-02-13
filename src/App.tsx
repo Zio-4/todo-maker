@@ -4,7 +4,9 @@ import logo from './logo.svg';
 function App() {
   return (
     <div className="App">
-        <h1>"Todo Maker :)"</h1>
+      <header className="App-header">
+          <h1>I love you <3</h1>
+      </header>
     </div>
   );
 }
