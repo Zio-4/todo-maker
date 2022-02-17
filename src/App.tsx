@@ -4,32 +4,86 @@ import { Authenticator } from '@aws-amplify/ui-react';
 import '@aws-amplify/ui-react/styles.css';
 import { API } from 'aws-amplify';
 import { listTodos } from './graphql/queries';
-import { createTodo as createTodoMutation, deleteTodo as deleteTodoMutation } from './graphql/mutations';
+import { createTodo, createTodo as createTodoMutation, deleteTodo as deleteTodoMutation } from './graphql/mutations';
+
 
 const initialFormState = { name: '', description: '' }
 
+// interface TodoState {
+//   todos: {
+//     // The question make means the type for that property is optional. 
+//     // It can either be a number or undefined
+//     id: string
+//     name: string
+//     description: string
+//     createdAt: string
+//     updatedAt: string
+//   }[]
+//   // the brackets above means that its an array
+// }
+
+interface Itodo {
+  id: string
+  name: string
+  description: string
+  createdAt: string
+  updatedAt: string
+}
+
+
+type getTodosQuery = {
+  listTodos: {
+    items: Itodo[]
+    nextToken: string
+  }
+}
+
+interface InewTodo {
+  createTodo: {
+    id: string
+    name: string
+    description: string
+    createdAt: string
+    updatedAt: string
+  }
+}
+
+
 function App() {
-  const [todos, setTodos] = useState([]);
+  const [todos, setTodos] = useState<Itodo[]>([]);
+  // Rewrite form data state with normal object declaration
   const [formData, setFormData] = useState(initialFormState);
 
   useEffect(() => {
     fetchTodos();
-  }, []);
+  }, [todos]);
 
   async function fetchTodos() {
-    const apiData = await API.graphql({ query: listTodos });
-    console.log("list of todos:", apiData.data.listTodos.items)
-    setNotes(apiData.data.listTodos.items);
+    try {
+      const apiData = (await API.graphql({ query: listTodos })) as {
+        data: getTodosQuery
+      }
+      setTodos(apiData.data.listTodos.items);
+    } catch (error) {
+      console.log(error)
+    }
   }
 
   async function createTodo() {
     if (!formData.name || !formData.description) return;
-    await API.graphql({ query: createTodoMutation, variables: { input: formData } });
-    setTodos([ ...todos, formData ]);
+    const newTodo = (await API.graphql({ query: createTodoMutation, variables: { input: formData } })) as {
+      id: string
+      name: string
+      description: string
+      createdAt: string
+      updatedAt: string
+    }
+    console.log(newTodo)
+    setTodos([ ...todos, newTodo ]);
     setFormData(initialFormState);
   }
 
-  async function deleteTodo({ id }) {
+  async function deleteTodo({ id }: {id: string}) {
     const newTodosArray = todos.filter(todo => todo.id !== id);
     setTodos(newTodosArray);
     await API.graphql({ query: deleteTodoMutation, variables: { input: { id } }});
@@ -54,8 +108,9 @@ function App() {
           <button onClick={createTodo}>Create Todo</button>
           <div style={{marginBottom: 30}}>
             {
-              notes.map(note => (
-                <div key={todo.id || todo.name}>
+              todos.map(todo => todo.id && (
+                // <div key={todo.id || todo.name}>
+                <div key={todo.id}>
                   <h2>{todo.name}</h2>
                   <p>{todo.description}</p>
                   <button onClick={() => deleteTodo(todo)}>Delete Todo</button>
@@ -71,3 +126,6 @@ function App() {
 }
 
 export default App;
+
+// Delete function takes in the id from the todo object which is destructured
+// The id property is optional in the object. It is optional because it needs to be defined but wont be there until it is created in the backend
