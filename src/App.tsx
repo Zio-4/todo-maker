@@ -81,11 +81,13 @@ function App() {
   return (
     <Authenticator>
       {({ signOut, user }) => (
-        <div className="App sm:container mx-auto">
+        <div className="sm:container mx-auto">
           <div className='w-10/12 mx-auto'>
+
             <div className='flex flex-row-reverse'>
-              <button onClick={signOut} className='text-right bg-red-600 rounded-md text-white py-1 px-3 '>Sign out</button>
+              <button onClick={signOut} className='text-right bg-red-600 rounded-md text-white py-1 px-3 mt-1'>Sign out</button>
             </div>
+            
             <h1 className='text-center my-6 font-bold text-2xl text-orange-300'>Todo Maker</h1>
 
             <form className='border-4 border-orange-200 rounded-md p-3 shadow-lg mb-6'>
@@ -114,18 +116,19 @@ function App() {
                 </div>
             </form>
           
-            <div >
+            <div>
               {
                 todos.map(todo => todo.id && (
-                  <div key={todo.id}>
+                  <div key={todo.id} className='border-2 border-slate-200 rounded-md shadow-md mb-3 p-1'>
                     <h2>{todo.name}</h2>
                     <p>{todo.description}</p>
-                    <button onClick={() => deleteTodo(todo)}>Delete Todo</button>
-                    {todo.image && <img src={todo.image} style={{width: 400}} />}
+                    <button onClick={() => deleteTodo(todo)} className='rounded bg-red-500 text-white py-1 px-2'>X</button>
+                    {todo.image && <img src={todo.image} className='w-fit' />}
                   </div>
                 ))
               }
             </div>
+
           </div>
         </div>
       )}
