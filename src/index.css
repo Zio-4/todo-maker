@@ -2,8 +2,11 @@
 @tailwind components;
 @tailwind utilities;
 
+@import url('https://fonts.googleapis.com/css2?family=Lato:wght@400;700&family=Roboto&display=swap');
+
 body {
   margin: 0;
-  background: white;
+  background: rgb(251, 247, 180);
+  font-family: 'Lato', sans-serif;
 }
 

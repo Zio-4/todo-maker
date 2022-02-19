@@ -81,37 +81,52 @@ function App() {
   return (
     <Authenticator>
       {({ signOut, user }) => (
-        <div className="App">
-          <h1>Todo Maker</h1>
+        <div className="App sm:container mx-auto">
+          <div className='w-10/12 mx-auto'>
+            <div className='flex flex-row-reverse'>
+              <button onClick={signOut} className='text-right bg-red-600 rounded-md text-white py-1 px-3 '>Sign out</button>
+            </div>
+            <h1 className='text-center my-6 font-bold text-2xl text-orange-300'>Todo Maker</h1>
 
-          <input
-            onChange={e => setFormData({ ...formData, 'name': e.target.value})}
-            placeholder="Todo name"
-            value={formData.name}
-          />
-          <input
-            onChange={e => setFormData({ ...formData, 'description': e.target.value})}
-            placeholder="Todo description"
-            value={formData.description}
-          />
-          <input
-            type='file'
-            onChange={onChange}
-          />
-          <button onClick={createTodo}>Create Todo</button>
-          <div style={{marginBottom: 30}}>
-            {
-              todos.map(todo => todo.id && (
-                <div key={todo.id}>
-                  <h2>{todo.name}</h2>
-                  <p>{todo.description}</p>
-                  <button onClick={() => deleteTodo(todo)}>Delete Todo</button>
-                  {todo.image && <img src={todo.image} style={{width: 400}} />}
+            <form className='border-4 border-orange-200 rounded-md p-3 shadow-lg mb-6'>
+                <label className='block mb-1'>Todo Name</label>
+                <input
+                  onChange={e => setFormData({ ...formData, 'name': e.target.value})}
+                  placeholder="Todo name"
+                  value={formData.name}
+                  className='block rounded-md mb-3 w-full p-1'
+                />
+                <label className='block mb-1'>Todo Description</label>
+                <input
+                  onChange={e => setFormData({ ...formData, 'description': e.target.value})}
+                  placeholder="Todo description"
+                  value={formData.description}
+                  className='block rounded-md mb-3 w-full p-1'
+                />
+                <label className='block mb-1'>Add a picture to your todo (optional)</label>
+                <input
+                  type='file'
+                  onChange={onChange}
+                  className='block mb-5 file:rounded-full file:border-0 file:bg-red-200 hover:file:bg-red-300 text-slate-500'
+                />
+                <div className='flex justify-center'>
+                  <button onClick={createTodo} className='rounded-full bg-orange-300 py-2 px-4'>Create Todo</button>
                 </div>
-              ))
-            }
+            </form>
+          
+            <div >
+              {
+                todos.map(todo => todo.id && (
+                  <div key={todo.id}>
+                    <h2>{todo.name}</h2>
+                    <p>{todo.description}</p>
+                    <button onClick={() => deleteTodo(todo)}>Delete Todo</button>
+                    {todo.image && <img src={todo.image} style={{width: 400}} />}
+                  </div>
+                ))
+              }
+            </div>
           </div>
-          <button onClick={signOut}>Sign out</button>
         </div>
       )}
     </Authenticator>
