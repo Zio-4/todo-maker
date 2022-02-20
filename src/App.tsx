@@ -69,7 +69,7 @@ function App() {
     const file = e.target.files![0];
     setFormData({ ...formData, image: file.name });
     await Storage.put(file.name, file);
-    fetchTodos();
+    // fetchTodos();
   }
 
   async function deleteTodo({ id }: {id: string}) {
@@ -79,10 +79,11 @@ function App() {
   }
 
   return (
-    <Authenticator>
+    <div >
+    <Authenticator className='fixed top-2/4 left-2/4 -translate-x-2/4 -translate-y-2/4 '>
       {({ signOut, user }) => (
         <div className="sm:container mx-auto">
-          <div className='w-10/12 mx-auto'>
+          <div className='w-10/12 md:max-w-screen-sm mx-auto'>
 
             <div className='flex flex-row-reverse'>
               <button onClick={signOut} className='text-right bg-red-600 rounded-md text-white py-1 px-3 mt-1'>Sign out</button>
@@ -90,7 +91,7 @@ function App() {
             
             <h1 className='text-center my-6 font-bold text-2xl text-orange-300'>Todo Maker</h1>
 
-            <form className='border-4 border-orange-200 rounded-md p-3 shadow-lg mb-6'>
+            <form className='bg-white bg-opacity-40 rounded-lg p-3 shadow-lg mb-6'>
                 <label className='block mb-1'>Todo Name</label>
                 <input
                   onChange={e => setFormData({ ...formData, 'name': e.target.value})}
@@ -119,11 +120,14 @@ function App() {
             <div>
               {
                 todos.map(todo => todo.id && (
-                  <div key={todo.id} className='border-2 border-slate-200 rounded-md shadow-md mb-3 p-1'>
+                  <div key={todo.id} className=' bg-white rounded-md shadow-md mb-3 py-2 px-4'>
                     <h2>{todo.name}</h2>
+                    <div className='border border-slate-100 my-1'></div>
                     <p>{todo.description}</p>
-                    <button onClick={() => deleteTodo(todo)} className='rounded bg-red-500 text-white py-1 px-2'>X</button>
-                    {todo.image && <img src={todo.image} className='w-fit' />}
+                    {todo.image && <img src={todo.image} className='w-fit mt-2 md:max-w-md md:mx-auto' />}
+                    <div className='flex justify-center mt-2'>
+                      <button onClick={() => deleteTodo(todo)} className='rounded bg-red-500 text-white py-1 px-2'>Delete</button>
+                    </div>
                   </div>
                 ))
               }
@@ -133,6 +137,7 @@ function App() {
         </div>
       )}
     </Authenticator>
+    </div>
   );
 }
 
